@@ -40,7 +40,6 @@ class Sound {
     }
 
     Sound(CPlugSound@ sound, const string&in folder, const string&in name = "") {
-        sound.MwAddRef();
         @this.sound = sound;
         this.folder = folder;
 
@@ -59,10 +58,6 @@ class Sound {
     ~Sound() {
         if (volume != _defaultVolume) {
             Restore(true);
-        }
-
-        if (sound !is null) {
-            sound.MwRelease();
         }
     }
 
