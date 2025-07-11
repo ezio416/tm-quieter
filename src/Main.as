@@ -15,14 +15,28 @@ void Main() {
     auto App = cast<CTrackMania>(GetApp());
     string lastLoadedTitle;
 
+#if TURBO
+    LoadSounds();
+    SetChoices();
+#endif
+
     while (true) {
         yield();
 
         if (true
+#if TMNEXT || MP4
             and App.LoadedManiaTitle !is null
             and App.LoadedManiaTitle.BaseTitleId != lastLoadedTitle
+#elif TURBO
+            and App.Challenge !is null
+            and App.Challenge.CollectionName != lastLoadedTitle
+#endif
         ) {
+#if TMNEXT || MP4
             lastLoadedTitle = App.LoadedManiaTitle.BaseTitleId;
+#elif TURBO
+            lastLoadedTitle = App.Challenge.CollectionName;
+#endif
             trace("new title: " + lastLoadedTitle);
 
             LoadSounds();
@@ -45,7 +59,7 @@ void AddSoundsFromFolder(const string&in folderName, const string&in sourceName)
     uint count = 0;
 
     for (uint i = 0; i < Folder.Leaves.Length; i++) {
-        CSystemFidFile@ File = Folder.Leaves[i];
+        auto File = cast<CSystemFidFile>(Folder.Leaves[i]);
         if (File !is null) {
             auto PlugSound = cast<CPlugSound>(File.Nod);
             if (PlugSound !is null) {
@@ -88,7 +102,9 @@ void LoadSounds() {
     sounds = {};
 
     AddSoundsFromFolder("Menu/Media/audio/Sound",                                   "Menu");
+#if TMNEXT || MP4
     AddSoundsFromFolder("Vehicles/Media/Audio/Sound",                               "Vehicles");
+#endif
 #if TMNEXT
     AddSoundsFromFolder("Vehicles/Cars/CarDesert/Audio",                            "CarDesert");
     AddSoundsFromFolder("Vehicles/Cars/CarRally/Audio",                             "CarRally");
@@ -140,7 +156,18 @@ void LoadSounds() {
     AddSoundsFromFolder("ShootMania/Media/Audio/Sound/Character/Material/Wood",     "Wood");
     AddSoundsFromFolder("ShootMania/Media/Audio/Sound/Impact/Wood",                 "Wood2");
 #elif TURBO
-    ;
+    AddSoundsFromFolder("CommonTMCE/Media/Audio/Sound/Vehicles/Agp/Canyon",         "Canyon");
+    AddSoundsFromFolder("CanyonCE/Media/Audio/Sound/Wav",                           "CanyonWav");
+    AddSoundsFromFolder("CommonTMCE/Media/Audio/Sound/Wav",                         "CommonWav");
+    AddSoundsFromFolder("CommonTMCE/Media/Audio/Sound/Vehicles/Wav",                "CommonWav2");
+    AddSoundsFromFolder("CommonTMCE/Media/Audio/Sound/Vehicles/Agp/Lagoon",         "Lagoon");
+    AddSoundsFromFolder("LagoonCE/Media/Audio/Sound",                               "LagoonSound");
+    AddSoundsFromFolder("Menu/Media/audio/Sound/Wav",                               "MenuWav");
+    AddSoundsFromFolder("ValleyCE/Media/Audio/Sound",                               "ValleySound");
+    AddSoundsFromFolder("CommonTMCE/Media/Audio/Sound/Vehicles/Agp/Stadium",        "Stadium");
+    AddSoundsFromFolder("StadiumCE/Media/Audio/Sound/Wav",                          "StadiumWav");
+    AddSoundsFromFolder("CommonTMCE/Media/Audio/Sound/Vehicles/WavData/ValleyMisc", "ValleyMisc");
+    AddSoundsFromFolder("CommonTMCE/Media/Audio/Sound/Vehicles/WavData",            "WavData");
 #endif
 
     sounds.SortAsc();
