@@ -1,5 +1,5 @@
 // c 2025-05-19
-// m 2025-05-20
+// m 2025-07-11
 
 class Sound {
     string      folder;
@@ -39,7 +39,7 @@ class Sound {
         }
     }
 
-    Sound(CPlugSound@ sound, const string &in folder, const string &in name = "") {
+    Sound(CPlugSound@ sound, const string&in folder, const string&in name = "") {
         @this.sound = sound;
         this.folder = folder;
 

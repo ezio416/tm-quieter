@@ -1,5 +1,5 @@
 // c 2025-05-19
-// m 2025-05-20
+// m 2025-07-11
 
 Json::Value@  choices     = Json::Object();
 const string  choicesFile = IO::FromStorageFolder("choices.json");
@@ -11,14 +11,45 @@ const float   scale       = UI::GetScale();
 Sound@[]      sounds;
 
 void Main() {
-    AddSoundsFromFolder("GameData/Menu/Media/audio/Sound",           "Menu");
-    AddSoundsFromFolder("GameData/Vehicles/Cars/CommonMedia/Audio",  "Common");
-    AddSoundsFromFolder("GameData/Vehicles/Cars/CarDesert/Audio",    "CarDesert");
-    AddSoundsFromFolder("GameData/Vehicles/Cars/CarRally/Audio",     "CarRally");
-    AddSoundsFromFolder("GameData/Vehicles/Cars/CarSnow/Audio",      "CarSnow");
-    AddSoundsFromFolder("GameData/Vehicles/Cars/CarSport/Audio",     "CarSport");
-    AddSoundsFromFolder("GameData/Vehicles/Media/Audio/Sound",       "Vehicles");
-    AddSoundsFromFolder("GameData/Vehicles/Media/Audio/Sound/Water", "Water");
+    Json::Value@ sources;
+    const string url = "https://openplanet.dev/plugin/quieter/config/sources";
+
+    const uint64 start = Time::Now;
+    trace("getting config from openplanet.dev");
+
+    while (true) {
+        Net::HttpRequest@ req = Net::HttpGet(url);
+        while (!req.Finished()) {
+            yield();
+        }
+
+        try {
+            @sources = req.Json();
+
+            if (sources.GetType() == Json::Type::Object and !sources.HasKey("error")) {
+                trace("got config after " + (Time::Now - start) + "ms: " + Json::Write(sources));
+                break;
+            }
+
+            @sources = null;
+
+        } catch {
+            error(getExceptionInfo());
+        }
+
+        warn("failed to get config from openplanet.dev after " + (Time::Now - start) + "ms");
+        sleep(5000);
+    }
+
+    string[]@ folders = sources.GetKeys();
+    string folder;
+
+    for (uint i = 0; i < folders.Length; i++) {
+        folder = folders[i];
+        AddSoundsFromFolder(folder, sources[folder]);
+    }
+
+    trace("found " + sounds.Length + " sounds");
 
     sounds.SortAsc();
 
@@ -54,9 +85,10 @@ void OnSettingsSave(Settings::Section&) {
     } catch { }
 }
 
-void AddSoundsFromFolder(const string &in folderName, const string &in sourceName) {
+void AddSoundsFromFolder(const string&in folderName, const string&in sourceName) {
     CSystemFidsFolder@ Folder = Fids::GetGameFolder(folderName);
     if (Folder is null) {
+        trace("null fid folder: " + folderName + " (" + sourceName + ")");
         return;
     }
 
