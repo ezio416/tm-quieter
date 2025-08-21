@@ -153,7 +153,13 @@ void RenderDebug() {
                 and sound.name.Length > 0
                 and sound.name != "empty"
             ) {
-                UI::Selectable(tostring(i) + " " + sound.name, Source.IsPlaying);
+                if (UI::Selectable(tostring(i) + " " + sound.name, Source.IsPlaying)) {
+                    if (Source.IsPlaying) {
+                        Source.Stop();
+                    } else {
+                        Source.Play();
+                    }
+                }
             }
         }
     }
