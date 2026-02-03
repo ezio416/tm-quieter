@@ -36,7 +36,7 @@ class Sound {
         }
     }
 
-    Sound(CPlugSound@ sound, const string &in folder, const string &in name = "") {
+    Sound(CPlugSound@ sound, const string&in folder, const string&in name = "") {
         @this.sound = sound;
         this.folder = folder;
 
@@ -77,7 +77,10 @@ class Sound {
     void Restore(bool destruct = false) {
         volume = _defaultVolume;
 
-        if (!destruct and choices.HasKey(uid)) {
+        if (true
+            and !destruct
+            and choices.HasKey(uid)
+        ) {
             choices.Remove(uid);
         }
     }

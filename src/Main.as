@@ -29,7 +29,10 @@ void Main() {
             @choices = Json::FromFile(choicesFile);
         } catch { }
 
-        if (choices !is null and choices.GetType() == Json::Type::Object) {
+        if (true
+            and choices !is null
+            and choices.GetType() == Json::Type::Object
+        ) {
             for (uint i = 0; i < sounds.Length; i++) {
                 if (choices.HasKey(sounds[i].uid)) {
                     Json::Value@ choice = choices[sounds[i].uid];
@@ -52,7 +55,7 @@ void OnSettingsSave(Settings::Section&) {
     } catch { }
 }
 
-void AddSoundsFromFolder(const string &in folderName, const string &in sourceName) {
+void AddSoundsFromFolder(const string&in folderName, const string&in sourceName) {
     CSystemFidsFolder@ Folder = Fids::GetGameFolder(folderName);
     if (Folder is null) {
         return;
@@ -61,10 +64,13 @@ void AddSoundsFromFolder(const string &in folderName, const string &in sourceNam
     for (uint i = 0; i < Folder.Leaves.Length; i++) {
         CSystemFidFile@ File = Folder.Leaves[i];
         if (File !is null) {
-            CPlugSound@ PlugSound = cast<CPlugSound>(File.Nod);
+            auto PlugSound = cast<CPlugSound>(File.Nod);
             if (PlugSound !is null) {
                 auto sound = Sound(PlugSound, sourceName);
-                if (sound.name.Length > 0 and sound.name != "empty") {
+                if (true
+                    and sound.name.Length > 0
+                    and sound.name != "empty"
+                ) {
                     sounds.InsertLast(sound);
                 }
             }
@@ -139,9 +145,15 @@ void RenderDebug() {
     CAudioPort@ AudioPort = GetApp().AudioPort;
     for (uint i = 0; i < AudioPort.Sources.Length; i++) {
         CAudioSource@ Source = AudioPort.Sources[i];
-        if (Source !is null and Source.PlugSound !is null) {
+        if (true
+            and Source !is null
+            and Source.PlugSound !is null
+        ) {
             auto sound = Sound(Source.PlugSound, "AudioPort");
-            if (sound.name.Length > 0 and sound.name != "empty") {
+            if (true
+                and sound.name.Length > 0
+                and sound.name != "empty"
+            ) {
                 UI::Selectable(tostring(i) + " " + sound.name, Source.IsPlaying);
             }
         }
