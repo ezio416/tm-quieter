@@ -1,6 +1,3 @@
-// c 2025-05-19
-// m 2025-05-20
-
 class Sound {
     string      folder;
     string      name;

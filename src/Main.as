@@ -1,6 +1,3 @@
-// c 2025-05-19
-// m 2025-05-20
-
 Json::Value@  choices     = Json::Object();
 const string  choicesFile = IO::FromStorageFolder("choices.json");
 const string  pluginColor = "\\$FAA";
