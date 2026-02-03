@@ -90,6 +90,8 @@ void RenderSounds() {
         UI::TableSetupColumn("slider", UI::TableColumnFlags::WidthStretch);
         UI::TableHeadersRow();
 
+        const float scale = UI::GetScale();
+
         UI::ListClipper clipper(sounds.Length);
         while (clipper.Step()) {
             for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; i++) {
@@ -122,7 +124,7 @@ void RenderSounds() {
                 UI::EndDisabled();
 
                 UI::TableNextColumn();
-                UI::SetNextItemWidth(UI::GetContentRegionAvail().x / UI::GetScale());
+                UI::SetNextItemWidth(UI::GetContentRegionAvail().x / scale);
                 const float volume = UI::SliderFloat("##slider" + i, sound.volume, -60.0f, 20.0f);
                 if (sound.volume != volume) {
                     sound.volume = volume;
