@@ -4,7 +4,6 @@ const string  pluginColor = "\\$FAA";
 const string  pluginIcon  = Icons::Kenney::SoundOff;
 Meta::Plugin@ pluginMeta  = Meta::ExecutingPlugin();
 const string  pluginTitle = pluginColor + pluginIcon + "\\$G " + pluginMeta.Name;
-const float   scale       = UI::GetScale();
 Sound@[]      sounds;
 
 void Main() {
@@ -123,7 +122,7 @@ void RenderSounds() {
                 UI::EndDisabled();
 
                 UI::TableNextColumn();
-                UI::SetNextItemWidth(UI::GetContentRegionAvail().x / scale);
+                UI::SetNextItemWidth(UI::GetContentRegionAvail().x / UI::GetScale());
                 const float volume = UI::SliderFloat("##slider" + i, sound.volume, -60.0f, 20.0f);
                 if (sound.volume != volume) {
                     sound.volume = volume;
